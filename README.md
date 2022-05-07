@@ -10,8 +10,8 @@ VarTrace is a debugger that records & analyze your script executions
 ![jump](https://github.com/zat-dev/VarTrace/raw/main/resources/step_back_demo.gif)
 
 ## quick start
-0. install this vscode extension. VT icon will appear the left of vscode(comming soon!)
-1. fill your execution command of sidebar
+0. search and install "vartrace" vscode extension. then VT icon will appear the left of vscode
+1. click VT icon and fill your execution command of sidebar
     * VarTrace generates configuration from your command
 2. push analyze button
 3. do the above Features section
@@ -23,6 +23,7 @@ VarTrace is a debugger that records & analyze your script executions
 * language : python
 * editor: vscode
 * single thread only
+* platform: windows
 
 the aboves will be enhanced.
 I beleive varTrace can support any language, any editor, multi thread.
