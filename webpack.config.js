@@ -18,8 +18,8 @@ const extensionConfig = {
     },
     devtool: 'nosources-source-map',
     externals: {
-        "mysql2": "mysql2", //unused kysely dialect
-        "pg": "pg",//unused kysely dialect
+        "mysql2": "mysql2", //unused kysely dialect but cause error
+        "pg": "pg",//unused kysely dialect but cause error
         "better-sqlite3": "commonjs better-sqlite3-electron",
         sqlite3: 'commonjs sqlite3',
         vscode: 'commonjs vscode' // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/

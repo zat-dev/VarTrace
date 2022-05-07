@@ -5,9 +5,9 @@ VarTrace is a debugger that records & analyze your script executions
 
 * printf debug without modifing your code
   * search & filter by variable name or value
-![printf](./resources/printf_demo.gif)
+![printf](https://github.com/zat-dev/VarTrace/raw/main/resources/printf_demo.gif)
 * step back, jump
-![jump](./resources/step_back_demo.gif)
+![jump](https://github.com/zat-dev/VarTrace/raw/main/resources/step_back_demo.gif)
 
 ## quick start
 0. install this vscode extension. VT icon will appear the left of vscode(comming soon!)
@@ -16,7 +16,7 @@ VarTrace is a debugger that records & analyze your script executions
 2. push analyze button
 3. do the above Features section
 
-![howto](./resources/howtorun.png)
+![howto](https://github.com/zat-dev/VarTrace/raw/main/resources/howtorun.png)
 
 ## current support
 
