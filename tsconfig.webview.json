@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "esnext",
+		"outDir": "dist",
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext"
+		],
+		"sourceMap": true,
+		"strict": true,
+		"jsx": "react",
+		"allowSyntheticDefaultImports": true,
+		"suppressImplicitAnyIndexErrors": true,
+	},
+	"exclude": [
+		"node_modules",
+		"./../node_modules/**",
+		".vscode-test",
+		"**/extension/**"
+	]
+}

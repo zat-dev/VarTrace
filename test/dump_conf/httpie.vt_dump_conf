@@ -1,0 +1,1 @@
+{"language":"python","execCommand":"python -m httpie google.com","options":[{"optionName":"targetModule","value":"httpie"}]}

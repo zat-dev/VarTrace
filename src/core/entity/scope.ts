@@ -1,0 +1,2 @@
+
+type Scope = "local" | "global" 

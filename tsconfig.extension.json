@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "esnext",
+		"outDir": "dist",
+		"lib": [
+			"esnext",
+			"dom",
+			"dom.iterable",
+		],
+		"sourceMap": true,
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+	},
+	"exclude": [
+		"node_modules",
+		"./../node_modules/**",
+		".vscode-test",
+		"**/webview/**",
+		"**/common/webview/**",
+	]
+}
