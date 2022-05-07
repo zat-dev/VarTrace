@@ -13,6 +13,8 @@ vsc-extension-quickstart.md
 test/**
 .vartrace/**
 node_modules
-!node_modules/better-sqlite3-electron
+!node_modules/better-sqlite3
 !node_modules/pg
 !node_modules/mysql2
+!node_modules/bindings
+!node_modules/file-uri-to-path

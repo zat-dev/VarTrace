@@ -126,6 +126,8 @@
 		"@types/react-redux": "^7.1.17",
 		"babel-jest": "^27.3.1",
 		"better-sqlite3": "^7.5.1",
+		"bindings": "^1.5.0",
+		"file-uri-to-path": "^2.0.0",
 		"kysely": "^0.16.9",
 		"material-ui-popup-state": "^1.9.3",
 		"react": "^17.0.2",
