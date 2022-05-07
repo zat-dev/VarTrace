@@ -1,11 +1,15 @@
 {
-	"name": "vartrace-vscode",
-	"publisher": "ozota1",
+	"name": "vartrace",
+	"publisher": "zat",
 	"displayName": "vartrace",
-	"description": "",
+	"description": "debug and analyzer",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zat-dev/VarTrace.git"
+	},
 	"version": "0.0.1",
 	"engines": {
-		"vscode": "^1.60.0"
+		"vscode": "^1.61.0"
 	},
 	"categories": [
 		"Other"
