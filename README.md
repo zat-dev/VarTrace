@@ -10,9 +10,9 @@ VarTrace is a debugger that records & analyze your script executions
 ![jump](./resources/step_back_demo.gif)
 
 ## quick start
-0. install this vscode extension. VT icon will appear the left of vscode
+0. install this vscode extension. VT icon will appear the left of vscode(comming soon!)
 1. fill your execution command of sidebar
-  * VarTrace generates configuration from your command
+    * VarTrace generates configuration from your command
 2. push analyze button
 3. do the above Features section
 
