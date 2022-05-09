@@ -199,10 +199,11 @@ export class SqliteLogLoarder implements LogLoader {
             if (val === undefined) {
                 throw Error("unexpected undefined val")
             }
+            // recoeded step is before line execution.
+            // so step when prev != current, it means the change made before step
+            const changedStep = Math.max(result.step - 1, 0)
             results.push({
-                // recoeded step is before execution.
-                // so step when prev != current means, the changed made before step
-                step: result.step - 1,
+                step: changedStep,
                 val: val,
                 prevVal: decode(result.prevValue),
                 scopeKind: result.scopeKind,
