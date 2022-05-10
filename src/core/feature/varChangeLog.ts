@@ -9,7 +9,7 @@ export type Query = {
     varNameFilter?: string,
     valueFilter?: string,
     showIgnored?: boolean,
-    filterOnlyHighlight?: boolean,
+    showFilterNotMatch?: boolean,
     page: number,
     pageSize: number
 }
@@ -54,14 +54,14 @@ export const getvarChangeLog = async (logLoader: LogLoader, cache: Cache, query:
         const varNameFilter = query.varNameFilter
         result = result.filter(entry =>
             addHitToTexts(entry.varName, varNameFilter)
-            || query.filterOnlyHighlight)
+            || query.showFilterNotMatch)
     }
     result.forEach(x => x.val.expression.forEach(clearHit))
     if (query.valueFilter) {
         const valueFilter = query.valueFilter
         result = result.filter(entry =>
             addHitToValue(entry.val, valueFilter)
-            || query.filterOnlyHighlight)
+            || query.showFilterNotMatch)
     }
 
     const pagingResult = paging(result, query.page, query.pageSize)

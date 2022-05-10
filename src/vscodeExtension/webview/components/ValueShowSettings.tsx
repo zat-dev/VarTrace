@@ -27,11 +27,11 @@ export const ValueShowSettings = () => {
 
             <Box display="flex" flexDirection={"column"}>
                 <FormControlLabel
-                    label={"filter only highlight"}
+                    label={"show filter not match"}
                     control={<Checkbox
-                        checked={reloadOptions.filterOnlyHighlight}
+                        checked={reloadOptions.showFilterNotMatch}
                         onChange={() => reloadShowOptions.sendEdit({
-                            filterOnlyHighlight: !reloadOptions.filterOnlyHighlight
+                            showFilterNotMatch: !reloadOptions.showFilterNotMatch
                         })}
                     />}
                 />

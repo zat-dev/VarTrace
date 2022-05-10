@@ -65,12 +65,12 @@ export const initialize = () => {
         const { step } = get(stepState)
         const { varTrace } = get(varTraceState)
         const { varNameFilter } = get(stepVarFilterState)
-        const { showIgnored, filterOnlyHighlight } = get(reloadShowOptionsState)
+        const { showIgnored, showFilterNotMatch } = get(reloadShowOptionsState)
         if (!varTrace) {
             return
         }
         const variables = await varTrace.getStepVars({
-            step, varNameFilter, showIgnored, filterOnlyHighlight
+            step, varNameFilter, showIgnored, showFilterNotMatch
         })
         const stepInfo = await varTrace.getStepInfo(step)
         set({

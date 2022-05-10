@@ -48,7 +48,7 @@ const load = async (get: StateGetterOf<typeof resultState>, set: (data: typeof i
     const userInput = get(userInputState)
     const currentResult = get(resultState)
     const { varTrace } = get(varTraceState)
-    const { showIgnored, filterOnlyHighlight } = get(reloadShowOptionsState)
+    const { showIgnored, showFilterNotMatch } = get(reloadShowOptionsState)
     set({ ...currentResult, loading: true })
     if (varTrace === null) {
         return
@@ -57,7 +57,7 @@ const load = async (get: StateGetterOf<typeof resultState>, set: (data: typeof i
         varTrace.getVarChangeLog({
             ...userInput,
             showIgnored,
-            filterOnlyHighlight
+            showFilterNotMatch
         })
     set({ ...result, loading: false })
 }

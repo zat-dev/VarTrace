@@ -7,7 +7,7 @@ export type Query = {
     step: number,
     varNameFilter: string,
     showIgnored?: boolean,
-    filterOnlyHighlight?: boolean,
+    showFilterNotMatch?: boolean,
 }
 
 export type Result = {
@@ -20,7 +20,7 @@ export type Result = {
 
 
 export const getStepVars = async (logLoader: LogLoader, query: Query) => {
-    const { step, varNameFilter, showIgnored, filterOnlyHighlight } = query
+    const { step, varNameFilter, showIgnored, showFilterNotMatch } = query
     const currentVariables = await logLoader.getStepVariables(step)
     const nextVariables = await logLoader.getStepVariables(step + 1)
     const keys = new Set([...Object.keys(currentVariables), ...Object.keys(nextVariables)])
@@ -54,7 +54,7 @@ export const getStepVars = async (logLoader: LogLoader, query: Query) => {
         varName.forEach(clearHit)
         if (varNameFilter) {
             const hasHit = addHitToTexts(varName, varNameFilter)
-            if (!filterOnlyHighlight && !hasHit) {
+            if (!showFilterNotMatch && !hasHit) {
                 continue
             }
         }
