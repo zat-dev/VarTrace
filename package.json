@@ -73,13 +73,11 @@
 		"build:dumper": "cpx \"src/dumper/*.*\" dist/dumper",
 		"watch:webpack": "webpack -w --mode development",
 		"watch:dumper": "cpx -w \"src/dumper/{*/*,*}\" dist/dumper",
-		"test": "npm run build && node ./node_modules/vscode/bin/test",
-		"package": "vsce package --yarn",
-		"rebuild": "npm run rebuild:electron-rebuild && npm run rebuild:evacuation && npm run rebuild:restore-node-ver && npm run rebuild:restore-evacuation",
-		"rebuild:electron-rebuild": "electron-rebuild -v 17.4.0 -f -w better-sqlite3",
-		"rebuild:restore-evacuation": "node -e \"require('fs').rename('better-sqlite3-electron', 'node_modules/better-sqlite3-electron', err => {console.log(err)})\"",
-		"rebuild:evacuation": "node -e \"require('fs').rename('node_modules/better-sqlite3', 'better-sqlite3-electron', err => {console.log(err)})\"",
-		"rebuild:restore-node-ver": "npm install better-sqlite3"
+		"test": "node ./node_modules/jest/bin/jest.js test/core.test.ts",
+		"package:windows": "vsce package --target win32-x64",
+		"package:linux": "vsce package --target linux-x64",
+		"back-rebuild": "npm uninstall better-sqlite3 && npm install better-sqlite3",
+		"rebuild": "electron-rebuild -v 17.4.0 -f -w better-sqlite3"
 	},
 	"devDependencies": {
 		"@types/better-sqlite3": "^7.5.0",
@@ -130,7 +128,6 @@
 		"@types/react-redux": "^7.1.17",
 		"babel-jest": "^27.3.1",
 		"better-sqlite3": "^7.5.1",
-		"bindings": "^1.5.0",
 		"file-uri-to-path": "^2.0.0",
 		"kysely": "^0.16.9",
 		"material-ui-popup-state": "^1.9.3",
