@@ -4,36 +4,12 @@ import { dumpConfState } from "./dumpConf"
 import * as vscode from "vscode"
 import * as path from "path"
 import * as os from "os"
-import { DumpConfig, makeDumpCommand } from "../../../dumper/lib";
+import { DumpConfig, prepareLogPath, runDump } from "../../../dumper/lib";
 import { SqliteLogLoarder } from "../../../logLoader/sqliteLogLoader";
 import { Terminal } from "../uiWrapper/terminal";
 import { FileSystemPicker } from "../uiWrapper/fileSystemPicker";
 import { addState, addProc, ExposeToWebview } from "../store/store";
 import { StateGetter, StateGetterOf } from "../store/state";
-
-const prepareDir = (outDir: string, outFile: string) => {
-    if (!fs.existsSync(outDir)) {
-        fs.mkdirSync(outDir)
-    }
-
-    if (fs.existsSync(outFile)) {
-        fs.unlinkSync(outFile)
-    }
-}
-
-const makeNewLog = (outDir: string, outFile: string) => {
-    prepareDir(outDir, outFile)
-    return new core.VarTrace(new SqliteLogLoarder(outFile))
-}
-
-const runDump = (extensionPath: string, conf: DumpConfig, outFile: string) => {
-    const dumpCommand = makeDumpCommand(
-        extensionPath,
-        conf,
-        outFile
-    )
-    Terminal.sendText(dumpCommand)
-}
 
 const domain = "logFile"
 
@@ -48,7 +24,7 @@ export const varTraceState = addState(domain, "varTrace", {
 const getDefaultOutPath = (extensionPath: string) => {
     const outDir = path.join(extensionPath, ".vartrace")
     const outFile = path.join(outDir, "tracelog.db")
-    return { outFile, outDir }
+    return outFile
 }
 
 const vscodeLogLoadContext = "varTrace.logLoaded"
@@ -62,9 +38,15 @@ export const initialize = (extensionPath: string) => {
                 if (varTrace) {
                     await varTrace.close()
                 }
-                const { outFile, outDir } = getDefaultOutPath(extensionPath)
-                const newVarTrace = makeNewLog(outDir, outFile)
-                runDump(extensionPath, conf, outFile)
+                const outFile = getDefaultOutPath(extensionPath)
+                const dumperRootAbsPath =
+                    path.join(extensionPath, "dist/dumper")
+
+                runDump(dumperRootAbsPath,
+                    (command: string) => Terminal.sendText(command),
+                    conf,
+                    outFile)
+                const newVarTrace = new core.VarTrace(new SqliteLogLoarder(outFile))
                 set({ varTrace: newVarTrace })
                 vscode.commands.executeCommand('setContext', vscodeLogLoadContext, true)
             }
@@ -77,8 +59,8 @@ export const initialize = (extensionPath: string) => {
                 }
                 const logPath = await FileSystemPicker.selectFile()
 
-                const { outFile, outDir } = getDefaultOutPath(extensionPath)
-                prepareDir(outDir, outFile)
+                const outFile = getDefaultOutPath(extensionPath)
+                prepareLogPath(outFile)
                 fs.copyFileSync(logPath, outFile)
                 set({
                     varTrace: new core.VarTrace(new SqliteLogLoarder(outFile))
@@ -89,7 +71,7 @@ export const initialize = (extensionPath: string) => {
         "save": {
             proc: async (_, set) => {
                 const logPath = await FileSystemPicker.selectSavePath()
-                const { outFile, outDir } = getDefaultOutPath(extensionPath)
+                const outFile = getDefaultOutPath(extensionPath)
                 fs.copyFileSync(outFile, logPath)
             }
         }
