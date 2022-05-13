@@ -5,6 +5,7 @@ import * as editorPanel from "../uiWrapper/editorPanel"
 import { varTraceState, metadataState } from "./logFile"
 import * as core from "../../../core"
 import { reloadShowOptionsState } from "./valueShowOption"
+import { CancelByFailure } from "./common"
 
 const domain = "breakPoints"
 
@@ -47,7 +48,7 @@ const breakPointStepsProcs = addProc(breakPointStepsState, {
         proc: async (get, set) => {
             const { varTrace } = get(varTraceState)
             if (!varTrace) {
-                throw new Error("no dump result")
+                throw new CancelByFailure("can not access analysis result")
             }
             const { breakPoints } = get(breakPointsState)
             let breakPointSteps: Result = {}

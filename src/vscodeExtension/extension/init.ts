@@ -11,6 +11,8 @@ import { StateGetter } from "./store/state"
 import * as EditorPanel from "./uiWrapper/editorPanel"
 import { WebviewViewProvider } from "./uiWrapper/webviewView"
 import { WebviewPanel } from "./uiWrapper/webviewPanel"
+import { inform } from "./uiWrapper/notification"
+import { CancelByFailure, CancelByUser } from "./processors/common"
 
 type Panels = Parameters<typeof panelHandle.initialize>[0]
 
@@ -37,7 +39,22 @@ const createUiWrappers = (context: vscode.ExtensionContext) => {
 const registerCommand = (context: vscode.ExtensionContext, command: string, action: () => Promise<void>) => {
     let disposable = vscode.commands.registerCommand(
         command,
-        () => action()
+        () => {
+            try {
+                action()
+            }
+            catch (e) {
+                if (e instanceof CancelByFailure) {
+                    inform(`${e}`)
+                }
+                else if (e instanceof CancelByUser) {
+                    // user cancel shows nothing
+                }
+                else {
+                    inform(`unhandled exception occured: ${e}`)
+                }
+            }
+        }
     );
     context.subscriptions.push(disposable);
 }
