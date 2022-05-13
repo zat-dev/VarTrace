@@ -1,5 +1,6 @@
 
 // helper functions to run dumper from nodejs(vscode)
+import * as fs from "fs"
 import * as path from "path"
 import stringArgv from 'string-argv'
 
@@ -30,13 +31,6 @@ export const getDefaultDumpConfig = (lang: SupportLang) => {
 
 type SupportLang = "python"
 
-const getDumperPath = (extensionPath: string, language: SupportLang) => {
-    const dumperRelPathDic: { [key in SupportLang]: string } = {
-        "python": 'dist/dumper/python/main.py'
-    }
-    return path.join(extensionPath, dumperRelPathDic[language])
-}
-
 const convertOptions = (options: DumpOption[]) => {
     let optionArgs = ""
     let stdin = ""
@@ -58,21 +52,46 @@ const convertOptions = (options: DumpOption[]) => {
     }
     return { stdin, optionArgs }
 }
+export const prepareLogPath = (outFile: string) => {
+    const parentDir = path.dirname(outFile)
+    if (!fs.existsSync(parentDir)) {
+        fs.mkdirSync(parentDir, { recursive: true })
+    }
 
-export const makeDumpCommand = (extensionPath: string, conf: DumpConfig, outPath: string) => {
-    const dumperPath = getDumperPath(extensionPath, conf.language)
-    // TODO: consider the nessesity about command injection protection
-    // all variables here seem to be valid path given by vscode. right?
+    if (fs.existsSync(outFile)) {
+        fs.unlinkSync(outFile)
+    }
+}
+
+const pythonExePattern = "(python|py)([.0-9]*)?(exe)?"
+
+export const complementExecCommand = (conf: DumpConfig, file: string) => {
+    switch (conf.language) {
+        case "python":
+            const re = new RegExp(pythonExePattern)
+            const matches = conf.execCommand.match(re)
+            if (matches === null) {
+                return undefined
+            }
+            return `${matches[0]} ${file}`
+        default:
+            throw new NeverCaseError(conf.language)
+    }
+}
+
+
+const makeDumpCommand = (dumperRootAbsPath: string, conf: DumpConfig, outPath: string) => {
     const execArgs = stringArgv(conf.execCommand)
     switch (conf.language) {
         case "python":
             // detect key positions
-            const pythonIndex = execArgs.findIndex(arg => /^(python|py)([.0-9]*)?(exe)?$/.test(arg))
+            const pythonIndex = execArgs.findIndex(arg => (new RegExp(`^${pythonExePattern}$`)).test(arg))
             const targetIndex = execArgs.findIndex((arg, i) => i > pythonIndex && !arg.startsWith("-"))
             const isModuleRun = execArgs[targetIndex - 1] === "-m"
             const insertDumperIndex = isModuleRun ? targetIndex - 1 : targetIndex
 
             const { optionArgs, stdin } = convertOptions(conf.options)
+            const dumperPath = path.join(dumperRootAbsPath, 'python/main.py')
             const dumperOptions = [
                 dumperPath,
                 ` -o ${outPath} `,
@@ -86,11 +105,37 @@ export const makeDumpCommand = (extensionPath: string, conf: DumpConfig, outPath
                 command += "\n"
                 command += stdin
             }
-            return command
+            return {
+                command,
+                prepare: (logPath: string) => {
+                    prepareLogPath(logPath)
+                    // pycache sometimes conflicts when multiple python versions are installed
+                    // to avoid this, remove cache of vartrace
+                    // __pycache__ path might be changed. but not support now.
+                    const cachePath = path.join(dumperRootAbsPath, "python/__pycache__")
+                    if (fs.existsSync(cachePath)) {
+                        fs.rmSync(cachePath, { recursive: true })
+                    }
+
+                }
+            }
         default:
             throw new NeverCaseError(conf.language)
     }
 }
 
 
+
+export const runDump = (
+    dumperRootAbsPath: string,
+    runner: (command: string) => void,
+    conf: DumpConfig,
+    logPath: string
+) => {
+
+    const { command, prepare } = makeDumpCommand(dumperRootAbsPath, conf, logPath)
+    prepare(logPath)
+    // to input stdin to user script, dumper runs on terminal(VSCode)
+    runner(command)
+}
 
