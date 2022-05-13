@@ -4,6 +4,7 @@ import { addProc, addState, ExposeToWebview } from "../store/store"
 import { StateGetter, StateGetterOf } from "../store/state"
 import * as editorPanel from "../uiWrapper/editorPanel"
 import { reloadShowOptionsState } from "./valueShowOption"
+import { CancelByFailure } from "./common"
 
 const domain = "varChangeLog"
 
@@ -25,7 +26,7 @@ const userInputProcs = addProc(userInputState, {
             const userInput = get(userInputState)
             const wordAtCursor = editorPanel.getWordAtCursor()
             if (!wordAtCursor) {
-                return
+                throw new CancelByFailure("no variable found")
             }
             set({ ...userInput, varNameFilter: wordAtCursor })
         }
@@ -51,7 +52,7 @@ const load = async (get: StateGetterOf<typeof resultState>, set: (data: typeof i
     const { showIgnored, showFilterNotMatch } = get(reloadShowOptionsState)
     set({ ...currentResult, loading: true })
     if (varTrace === null) {
-        return
+        throw new CancelByFailure("can not access analysis result")
     }
     const result = await
         varTrace.getVarChangeLog({

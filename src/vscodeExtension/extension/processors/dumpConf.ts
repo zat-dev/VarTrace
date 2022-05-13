@@ -4,6 +4,7 @@ import { complementExecCommand, getDefaultDumpConfig } from "../../../dumper/lib
 import { addState, addProc, ExposeToWebview } from "../store/store";
 import * as vscode from "vscode";
 import { inform } from "../uiWrapper/notification";
+import { CancelByFailure, CancelByUser } from "./common";
 const domain = "dumpConf"
 
 
@@ -27,8 +28,7 @@ const procs = addProc(dumpConfState, {
             const userInput = get(dumpConfState)
             const activeFile = vscode.window.activeTextEditor?.document.fileName ?? ""
             if (!activeFile) {
-                inform("tried complementing execution command. but opened active file not found")
-                return
+                throw new CancelByFailure("tried complementing execution command. but opened active file not found")
             }
 
             let execCommand = complementExecCommand(userInput, activeFile)
@@ -36,7 +36,7 @@ const procs = addProc(dumpConfState, {
                 const execInput = await
                     vscode.window.showInputBox({ title: "input your executable(ex: python, python3)" })
                 if (execInput === undefined) {
-                    return
+                    throw new CancelByUser()
                 }
                 execCommand = `${execInput} ${activeFile}`
             }

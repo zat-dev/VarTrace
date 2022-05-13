@@ -1,4 +1,5 @@
 import { encodeDisplayMessage, isCallMessage, isSubscribeMessage, isUpdateMessage } from "../messaging"
+import { CancelByFailure, CancelByUser } from "./processors/common"
 import { addSubscriber, callProc, updateState } from "./store/store"
 import { inform } from "./uiWrapper/notification"
 
@@ -27,6 +28,14 @@ export const handleMessage = (message: any, sender: MessageSender) => {
             updateState<any>(stateId, data)
         }
     } catch (e) {
-        inform(`unhandled exception occured: ${e}`)
+        if (e instanceof CancelByFailure) {
+            inform(`${e}`)
+        }
+        else if (e instanceof CancelByUser) {
+            // user cancel shows nothing
+        }
+        else {
+            inform(`unhandled exception occured: ${e}`)
+        }
     }
 }

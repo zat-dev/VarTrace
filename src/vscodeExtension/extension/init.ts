@@ -12,6 +12,7 @@ import * as EditorPanel from "./uiWrapper/editorPanel"
 import { WebviewViewProvider } from "./uiWrapper/webviewView"
 import { WebviewPanel } from "./uiWrapper/webviewPanel"
 import { inform } from "./uiWrapper/notification"
+import { CancelByFailure, CancelByUser } from "./processors/common"
 
 type Panels = Parameters<typeof panelHandle.initialize>[0]
 
@@ -43,7 +44,15 @@ const registerCommand = (context: vscode.ExtensionContext, command: string, acti
                 action()
             }
             catch (e) {
-                inform(`unhandled exception occured: ${e}`)
+                if (e instanceof CancelByFailure) {
+                    inform(`${e}`)
+                }
+                else if (e instanceof CancelByUser) {
+                    // user cancel shows nothing
+                }
+                else {
+                    inform(`unhandled exception occured: ${e}`)
+                }
             }
         }
     );

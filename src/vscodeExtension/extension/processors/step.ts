@@ -5,6 +5,7 @@ import * as editorPanel from "../uiWrapper/editorPanel"
 import { varTraceState, metadataState } from "./logFile"
 import * as core from "../../../core"
 import { reloadShowOptionsState } from "./valueShowOption"
+import { CancelByFailure } from "./common"
 
 const domain = "step"
 
@@ -67,7 +68,7 @@ export const initialize = () => {
         const { varNameFilter } = get(stepVarFilterState)
         const { showIgnored, showFilterNotMatch } = get(reloadShowOptionsState)
         if (!varTrace) {
-            return
+            throw new CancelByFailure("can not access analysis result")
         }
         const variables = await varTrace.getStepVars({
             step, varNameFilter, showIgnored, showFilterNotMatch
