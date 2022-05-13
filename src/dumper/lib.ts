@@ -63,12 +63,29 @@ export const prepareLogPath = (outFile: string) => {
     }
 }
 
+const pythonExePattern = "(python|py)([.0-9]*)?(exe)?"
+
+export const complementExecCommand = (conf: DumpConfig, file: string) => {
+    switch (conf.language) {
+        case "python":
+            const re = new RegExp(pythonExePattern)
+            const matches = conf.execCommand.match(re)
+            if (matches === null) {
+                return undefined
+            }
+            return `${matches[0]} ${file}`
+        default:
+            throw new NeverCaseError(conf.language)
+    }
+}
+
+
 const makeDumpCommand = (dumperRootAbsPath: string, conf: DumpConfig, outPath: string) => {
     const execArgs = stringArgv(conf.execCommand)
     switch (conf.language) {
         case "python":
             // detect key positions
-            const pythonIndex = execArgs.findIndex(arg => /^(python|py)([.0-9]*)?(exe)?$/.test(arg))
+            const pythonIndex = execArgs.findIndex(arg => (new RegExp(`^${pythonExePattern}$`)).test(arg))
             const targetIndex = execArgs.findIndex((arg, i) => i > pythonIndex && !arg.startsWith("-"))
             const isModuleRun = execArgs[targetIndex - 1] === "-m"
             const insertDumperIndex = isModuleRun ? targetIndex - 1 : targetIndex

@@ -1,6 +1,6 @@
 import * as fs from "fs"
 import { FileSystemPicker } from "../uiWrapper/fileSystemPicker";
-import { getDefaultDumpConfig } from "../../../dumper/lib";
+import { complementExecCommand, getDefaultDumpConfig } from "../../../dumper/lib";
 import { addState, addProc, ExposeToWebview } from "../store/store";
 import * as vscode from "vscode";
 import { inform } from "../uiWrapper/notification";
@@ -28,8 +28,19 @@ const procs = addProc(dumpConfState, {
             const activeFile = vscode.window.activeTextEditor?.document.fileName ?? ""
             if (!activeFile) {
                 inform("tried complementing execution command. but opened active file not found")
+                return
             }
-            const execCommand = `python3 ${activeFile}`
+
+            let execCommand = complementExecCommand(userInput, activeFile)
+            if (execCommand === undefined) {
+                const execInput = await
+                    vscode.window.showInputBox({ title: "input your executable(ex: python, python3)" })
+                if (execInput === undefined) {
+                    return
+                }
+                execCommand = `${execInput} ${activeFile}`
+            }
+
             set({ ...userInput, execCommand })
             inform(`execution command is complemented by ${activeFile}`)
         }
