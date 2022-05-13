@@ -66,14 +66,14 @@ export const prepareLogPath = (outFile: string) => {
 const pythonExePattern = "(python|py)([.0-9]*)?(exe)?"
 
 export const complementExecCommand = (conf: DumpConfig, file: string) => {
+    const execArgs = stringArgv(conf.execCommand)
     switch (conf.language) {
         case "python":
-            const re = new RegExp(pythonExePattern)
-            const matches = conf.execCommand.match(re)
-            if (matches === null) {
+            const pythonIndex = execArgs.findIndex(arg => (new RegExp(`^${pythonExePattern}$`)).test(arg))
+            if (pythonIndex === -1) {
                 return undefined
             }
-            return `${matches[0]} ${file}`
+            return `${execArgs[pythonIndex]} ${file}`
         default:
             throw new NeverCaseError(conf.language)
     }
