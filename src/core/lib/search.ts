@@ -12,15 +12,15 @@ export const clearHitFromValue = (value: Value) => {
 
 const addHitToDecoTxt = (decoTxt: ValueText, searchString: string) => {
     const text = decoTxt.text
-    const hitLen = searchString.length
     // clear previous result
     decoTxt.hit = []
-    let i = -1
-    while ((i = text.indexOf(searchString, i + 1)) >= 0) {
-        decoTxt.hit.push({ start: i, end: i + hitLen })
-        // if target is '111' and searchString is '11'
-        // only prefix '11' is regarded as matched string.
-        i += hitLen
+    const regexp = new RegExp(searchString, 'g')
+    const matches = text.matchAll(regexp)
+
+    for (const match of matches) {
+        // note: although type errors, index, match[0] never null
+        // https://github.com/microsoft/TypeScript/issues/36788
+        decoTxt.hit.push({ start: match.index!, end: match.index! + match[0]!.length })
     }
     return decoTxt.hit.length > 0
 }
