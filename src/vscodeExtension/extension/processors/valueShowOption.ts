@@ -15,7 +15,7 @@ export const noReloadShowOptionsState = addState(domain, "noReload", {
 export const reloadShowOptionsState = addState(domain, "reload", {
     userEditable: true as const,
     init: {
-        showIgnored: false,
+        showIgnored: true,
         showFilterNotMatch: false
     },
     depends: []
