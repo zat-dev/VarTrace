@@ -52,12 +52,16 @@ export class WebviewPanel {
     })
     this.panel.webview.html = this.createWebViewHtmlString()
     this.panel.iconPath = vscode.Uri.joinPath(vscode.Uri.file(extensionPath), "resources", "vt.png")
+
   }
 
   open = () => {
     if (this.isPanelDisposed || this.panel === undefined) {
       this.createPanel()
       this.isPanelDisposed = false
+    }
+    if (!this.panel?.visible) {
+      this.panel?.reveal()
     }
   }
 
