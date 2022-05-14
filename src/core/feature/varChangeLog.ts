@@ -1,7 +1,7 @@
 import { decorateDiff } from "../lib/decorateDiff"
 import { ValueText, Value } from "../entity/value"
 import { paging, Paging } from "../lib/paging"
-import { addHitToTexts, addHitToValue, clearHit } from "../lib/search"
+import { addHitToTexts, addHitToValue, clearHitFromText, clearHitFromValue } from "../lib/search"
 import { LogLoader, LogLoadStatus, VarChangeLog } from "../entity/logLoader"
 import { abbrivateValue } from "../lib/abbrivate"
 import { Cache } from "../lib/cache"
@@ -39,16 +39,27 @@ const getResultFromLog = async (logLoader: LogLoader) => {
     return result
 }
 
+const clearHitFromResult = (result: VarChangeLog) => {
+    for (const entry of result) {
+        entry.varName.forEach(x => clearHitFromText(x))
+        clearHitFromValue(entry.val)
+        if (entry.prevVal) {
+            clearHitFromValue(entry.prevVal)
+        }
+    }
+}
+
 export const getvarChangeLog = async (logLoader: LogLoader, cache: Cache, query: Query): Promise<Result> => {
     const cacheKey = "varChangeLog"
     let result: VarChangeLog = cache.get(cacheKey) ?? await getResultFromLog(logLoader)
     if (!cache.has(cacheKey) && await isStopped(logLoader)) {
         cache.add(cacheKey, result)
     }
+    // performance reason, var change log is cached and mutable change might remain
+    clearHitFromResult(result)
     if (!query.showIgnored) {
         result = result.filter(x => x.val.type !== "ignored" || query.showIgnored)
     }
-    result.forEach(x => x.varName.forEach(clearHit))
 
     if (query.varNameFilter) {
         const varNameFilter = query.varNameFilter
@@ -56,7 +67,7 @@ export const getvarChangeLog = async (logLoader: LogLoader, cache: Cache, query:
             addHitToTexts(entry.varName, varNameFilter)
             || query.showFilterNotMatch)
     }
-    result.forEach(x => x.val.expression.forEach(clearHit))
+
     if (query.valueFilter) {
         const valueFilter = query.valueFilter
         result = result.filter(entry =>

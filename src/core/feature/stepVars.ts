@@ -1,7 +1,7 @@
 import { Value, ValueText } from "../entity/value"
 import { LogLoader } from "../entity/logLoader"
 import { decorateDiff } from "../lib/decorateDiff"
-import { addHitToTexts, clearHit } from "../lib/search"
+import { addHitToTexts } from "../lib/search"
 
 export type Query = {
     step: number,
@@ -17,7 +17,6 @@ export type Result = {
         after: Value | undefined
     }[]
 }
-
 
 export const getStepVars = async (logLoader: LogLoader, query: Query) => {
     const { step, varNameFilter, showIgnored, showFilterNotMatch } = query
@@ -51,7 +50,7 @@ export const getStepVars = async (logLoader: LogLoader, query: Query) => {
             decorateDiff(after, before)
         }
         let scope = scopeKind
-        varName.forEach(clearHit)
+
         if (varNameFilter) {
             const hasHit = addHitToTexts(varName, varNameFilter)
             if (!showFilterNotMatch && !hasHit) {

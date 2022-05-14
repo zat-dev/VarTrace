@@ -1,8 +1,14 @@
 import { ValueText, Value, isPrimitive } from "../entity/value";
 
-export const clearHit = (decoTxt: ValueText) => {
+export const clearHitFromText = (decoTxt: ValueText) => {
     decoTxt.hit = []
 }
+
+export const clearHitFromValue = (value: Value) => {
+    value.hasHit = false
+    value.expression.forEach(clearHitFromText)
+}
+
 
 const addHitToDecoTxt = (decoTxt: ValueText, searchString: string) => {
     const text = decoTxt.text
