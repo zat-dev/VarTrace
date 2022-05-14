@@ -206,7 +206,7 @@ export const StepDetailPanel = () => {
 
             </Box>
             <Divider />
-            <Box maxHeight={"50vh"} sx={{ overflowY: "scroll" }}>
+            <Box sx={{ overflowY: "scroll" }}>
                 <Box marginY={1} style={{ overflowY: "auto", flexGrow: 1 }} >
                     {stepDetail && <StepVariables></StepVariables>}
                 </Box>
