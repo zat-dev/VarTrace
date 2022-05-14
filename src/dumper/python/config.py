@@ -8,11 +8,11 @@ class Config:
     out_file: str
     step_limit: int
     size_limit: int
-    target_modules: list[str]
-    dirs: list[str]
+    target_modules: list
+    dirs: list
     module_mode: bool
     main: str
-    args: list[str]
+    args: list
 
     def __init__(self):
         default_output = 'vtlog.db'
