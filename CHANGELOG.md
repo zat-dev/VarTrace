@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "vscode-extention" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- v0.0.1: Initial release
+- v0.0.2: bugfix release
+  - python3.8 support
+  - avoid pycache conflict
+  - fix wrong complement of execution command

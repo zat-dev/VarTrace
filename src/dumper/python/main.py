@@ -6,7 +6,7 @@ import signal
 from dump_handler import DumpHandler
 from config import Config
 
-version = "0.0.1"
+version = "0.0.2"
 
 
 def imitate_sys(config: Config):

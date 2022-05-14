@@ -8,7 +8,7 @@ import ast
 from serializer import serialize
 from sqlite_saver import SqliteSaver
 
-version = "0.0.1"
+version = "0.0.2"
 
 
 class DumpHandler():
