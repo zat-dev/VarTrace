@@ -1,5 +1,5 @@
 # VarTrace 
-VarTrace is a debugger that records & analyze your script executions
+VarTrace is a python debugger that records & analyze your script executions
 
 ## Features
 
