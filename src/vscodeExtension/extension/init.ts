@@ -60,16 +60,21 @@ const registerCommand = (context: vscode.ExtensionContext, command: string, acti
 }
 
 const registerVscodeCall = (context: vscode.ExtensionContext) => {
-    registerCommand(context, "extension.vartrace", async () => {
+    registerCommand(context, "extension.vartrace.complementrun", async () => {
         await store.callProc<dumpConf.DumpConf>("dumpConf/userInput", "complementExecCommand")
         await store.callProc<logFile.LogFile>("logFile/varTrace", "dump")
         await store.callProc<panelHandle.PanelHandle>("panel/open", "openStepDetail")
         await store.callProc<panelHandle.PanelHandle>("panel/open", "openVarChangeLog")
     })
-    registerCommand(context, "setVarNameFromCursor", async () => {
+    registerCommand(context, "extension.vartrace.setVarNameFromCursor", async () => {
         await store.callProc<panelHandle.PanelHandle>("panel/open", "openVarChangeLog")
         await store.callProc<varChangeLog.UserInput>("varChangeLog/userInput", "setVarNameFromCursor")
         await store.callProc<varChangeLog.Result>("varChangeLog/result", "load")
+    })
+    registerCommand(context, "extension.vartrace.run", async () => {
+        await store.callProc<logFile.LogFile>("logFile/varTrace", "dump")
+        await store.callProc<panelHandle.PanelHandle>("panel/open", "openStepDetail")
+        await store.callProc<panelHandle.PanelHandle>("panel/open", "openVarChangeLog")
     })
     vscode.debug.onDidChangeBreakpoints(
         () => store.callProc<breakPoint.BreakPoints>("breakPoints/breakPoints", "readFromVscode")

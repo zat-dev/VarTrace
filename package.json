@@ -15,20 +15,25 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.vartrace",
+		"onCommand:extension.vartrace.complementrun",
 		"onView:vartrace.sidebar"
 	],
 	"main": "./dist/index.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.vartrace",
+				"command": "extension.vartrace.complementrun",
 				"title": "vartrace - analyze this file as a script",
 				"category": "debug"
 			},
 			{
-				"command": "setVarNameFromCursor",
+				"command": "extension.vartrace.setVarNameFromCursor",
 				"title": "vartrace - trace this variable",
+				"category": "debug"
+			},
+			{
+				"command": "extension.vartrace.run",
+				"title": "vartrace - run analysis by current config",
 				"category": "debug"
 			}
 		],
@@ -54,13 +59,18 @@
 			"editor/context": [
 				{
 					"when": "editorFocus",
-					"command": "extension.vartrace",
+					"command": "extension.vartrace.complementrun",
 					"group": "VarTrace@1"
 				},
 				{
-					"when": "varTrace.logLoaded",
-					"command": "setVarNameFromCursor",
+					"when": "editorFocus",
+					"command": "extension.vartrace.run",
 					"group": "VarTrace@2"
+				},
+				{
+					"when": "varTrace.logLoaded",
+					"command": "extension.vartrace.setVarNameFromCursor",
+					"group": "VarTrace@3"
 				}
 			]
 		}
