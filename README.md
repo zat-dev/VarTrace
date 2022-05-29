@@ -25,19 +25,13 @@ VarTrace is a python debugger that records & analyze your script executions
 * single thread only
 * platform: windows
 
-the aboves will be enhanced.
-I beleive varTrace can support any language, any editor, multi thread.
-
-please contribute!
-docs for dev is comming soon
-
+# limitation
+* heavy performance degradation
 
 ## Extension Settings
 * fill your python execution commands and push analyze button
 
 # LICENSE
 * GPL v3
-
-in the future, this will be changed
 
 
